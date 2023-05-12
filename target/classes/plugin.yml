@@ -1,0 +1,19 @@
+name: ChatInDiscord
+authors:
+  - Jqstln
+  - Delphind
+description: A Minecraft plugin that sends chat messages to a designated Discord channel using a webhook.
+version: '1.0.0'
+main: dev.jqstln.chatindiscord.ChatInDiscord
+api-version: 1.19
+
+commands:
+  chatindiscord:
+    description: Sends Minecraft chat messages to a specific Discord channel.
+    aliases: [cid]
+    tab-completer: dev.jqstln.chatindiscord.ChatInDiscordCommand
+
+permissions:
+  chatindiscord.use:
+    description: Allows the player to use the chatindiscord command.
+    default: op
