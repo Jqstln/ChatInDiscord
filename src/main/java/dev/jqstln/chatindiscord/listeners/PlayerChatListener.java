@@ -48,7 +48,7 @@ public class PlayerChatListener implements Listener {
         try {
             webhook.execute();
         } catch (IOException var7) {
-            Bukkit.getLogger().severe(Arrays.toString(var7.getStackTrace()));
+            // Bukkit.getLogger().severe(Arrays.toString(var7.getStackTrace()));
         }
     }
 

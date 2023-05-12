@@ -2,6 +2,7 @@ package dev.jqstln.chatindiscord;
 
 import dev.jqstln.chatindiscord.commands.ChatInDiscordCommand;
 import dev.jqstln.chatindiscord.listeners.PlayerChatListener;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ChatInDiscord extends JavaPlugin {
@@ -14,6 +15,10 @@ public final class ChatInDiscord extends JavaPlugin {
 
         // Commands && Listeners
         this.registerCommands();
+
+        // bStats
+        int pluginId = 18452; // <-- Replace with the id of your plugin!
+        Metrics metrics = new Metrics(this, pluginId);
     }
     @Override
     public void onDisable() {
