@@ -1,6 +1,9 @@
 Prefix: "&C&LC&A&LI&9&lD &r&8| "
 IntegrationUrl: '' # Put here your Discord Webhook URL
-DiscordEmbed: true # Set to false to disable embeds
+
+EmbedOptions:
+  Enabled: true # Set to false to disable embeds
+  Color: "#000000" # Hex colors: #FFFFFF, #000000, etc.
 
 Messages: # You can change the messages here, but you can't change the colors (yet)
   NoPermission: "You don't have permission to use this command."

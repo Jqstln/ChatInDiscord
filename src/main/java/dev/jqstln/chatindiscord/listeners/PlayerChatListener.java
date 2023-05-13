@@ -2,7 +2,6 @@ package dev.jqstln.chatindiscord.listeners;
 
 import dev.jqstln.chatindiscord.ChatInDiscord;
 import dev.jqstln.chatindiscord.discord.DiscordWebhook;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,7 +10,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class PlayerChatListener implements Listener {
     private final ChatInDiscord plugin;
@@ -29,7 +27,7 @@ public class PlayerChatListener implements Listener {
         String player = e.getPlayer().getName();
         DiscordWebhook webhook = new DiscordWebhook(webhookURL);
 
-        boolean useEmbed = this.plugin.getConfig().getBoolean("DiscordEmbed");
+        boolean useEmbed = this.plugin.getConfig().getBoolean("EmbedOptions.Enabled");
 
         if (webhookURL == null || webhookURL.isEmpty()) {
             Player sender = e.getPlayer();
@@ -39,8 +37,9 @@ public class PlayerChatListener implements Listener {
             return;
         }
 
+
         if (useEmbed) {
-            webhook.addEmbed((new DiscordWebhook.EmbedObject()).setDescription(player + ": " + message).setColor(Color.CYAN));
+            webhook.addEmbed((new DiscordWebhook.EmbedObject()).setDescription(player + ": " + message).setColor(Color.decode(this.plugin.getConfig().getString("EmbedOptions.Color"))));
         } else {
             webhook.setContent(player + ": " + message);
         }
