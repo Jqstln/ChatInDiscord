@@ -6,15 +6,16 @@ name: Maven To GH Packages
 on:
   release:
     types: [created]
-
+  workflow_dispatch:
+concurrency: 
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -23,10 +24,8 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-
     - name: Publish to GitHub Packages
       run: mvn --batch-mode deploy
       env:
