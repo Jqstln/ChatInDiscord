@@ -1,5 +1,5 @@
 ## ChatInDiscord 😎
-A simplified version of [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/) that allows to send minecraft messages to a discord channel using a webhook.
+A simplified version of [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/) that allows to send Minecraft messages to a Discord channel using a webhook.
 
 ## Issues or pull requests?
 Always welcome!
