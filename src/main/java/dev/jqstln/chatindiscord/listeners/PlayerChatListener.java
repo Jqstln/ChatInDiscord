@@ -39,7 +39,10 @@ public class PlayerChatListener implements Listener {
 
 
         if (useEmbed) {
-            webhook.addEmbed((new DiscordWebhook.EmbedObject()).setDescription(player + ": " + message).setColor(Color.decode(this.plugin.getConfig().getString("EmbedOptions.Color"))));
+            webhook.addEmbed((new DiscordWebhook.EmbedObject())
+                    .setDescription(player + ": " + message)
+                    .setColor(Color.decode(this.plugin.getConfig().getString("EmbedOptions.Color"))))
+                    .setThumbnail(this.plugin.getConfig().getString("EmbedOptions.Thumbnail"))
         } else {
             webhook.setContent(player + ": " + message);
         }
