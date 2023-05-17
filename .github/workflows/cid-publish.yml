@@ -6,7 +6,10 @@ name: Publish ChatInDiscord to Github Packages
 on:
   release:
     types: [created]
-
+  workflow_dispatch:
+concurrency: 
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
 
