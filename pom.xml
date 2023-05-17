@@ -6,13 +6,13 @@
 
     <groupId>dev.jqstln</groupId>
     <artifactId>ChatInDiscord</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
 
     <name>ChatInDiscord</name>
 
     <properties>
-        <java.version>1.17</java.version>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

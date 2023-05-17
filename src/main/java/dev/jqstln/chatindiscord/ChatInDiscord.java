@@ -8,24 +8,28 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class ChatInDiscord extends JavaPlugin {
     @Override
     public void onEnable() {
-        this.getConfig().options().copyDefaults();
-        this.saveDefaultConfig();
-        this.getServer().getPluginManager().registerEvents(new PlayerChatListener(this), this);
-        this.getLogger().info("ChatInDiscord has been enabled!");
+        getConfig().options().copyDefaults(true);
+        saveDefaultConfig();
+        getLogger().info("ChatInDiscord has been enabled!");
 
-        // Commands && Listeners
-        this.registerCommands();
+        registerCommands();
+        registerListeners();
 
         // bStats
-        int pluginId = 18452; // <-- Replace with the id of your plugin!
+        int pluginId = 18452;
         Metrics metrics = new Metrics(this, pluginId);
     }
+
     @Override
     public void onDisable() {
-        this.getLogger().info("ChatInDiscord has been disabled!");
+        getLogger().info("ChatInDiscord has been disabled!");
     }
 
     public void registerCommands() {
         getCommand("chatindiscord").setExecutor(new ChatInDiscordCommand(this));
+    }
+
+    public void registerListeners() {
+        getServer().getPluginManager().registerEvents(new PlayerChatListener(this), this);
     }
 }

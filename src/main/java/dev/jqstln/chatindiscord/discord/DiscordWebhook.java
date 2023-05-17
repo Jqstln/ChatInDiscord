@@ -1,17 +1,18 @@
 package dev.jqstln.chatindiscord.discord;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * Class used to execute Discord Webhooks with low effort
- */
+import javax.net.ssl.HttpsURLConnection;
+
 public class DiscordWebhook {
 
     private final String url;
@@ -21,11 +22,6 @@ public class DiscordWebhook {
     private String avatarUrl;
     private boolean tts;
 
-    /**
-     * Constructs a new DiscordWebhook instance
-     *
-     * @param url The webhook URL obtained in Discord
-     */
     public DiscordWebhook(String url) {
         this.url = url;
     }
@@ -72,12 +68,9 @@ public class DiscordWebhook {
                 jsonEmbed.put("description", embed.getDescription());
                 jsonEmbed.put("url", embed.getUrl());
 
-                if (embed.getColor() != null) {
-                    Color color = embed.getColor();
-                    int rgb = color.getRed();
-                    rgb = (rgb << 8) + color.getGreen();
-                    rgb = (rgb << 8) + color.getBlue();
-
+                Color color = embed.getColor();
+                if (color != null) {
+                    int rgb = color.getRGB() & 0xFFFFFF;
                     jsonEmbed.put("color", rgb);
                 }
 
@@ -89,7 +82,6 @@ public class DiscordWebhook {
 
                 if (footer != null) {
                     JSONObject jsonFooter = new JSONObject();
-
                     jsonFooter.put("text", footer.getText());
                     jsonFooter.put("icon_url", footer.getIconUrl());
                     jsonEmbed.put("footer", jsonFooter);
@@ -97,21 +89,18 @@ public class DiscordWebhook {
 
                 if (image != null) {
                     JSONObject jsonImage = new JSONObject();
-
                     jsonImage.put("url", image.getUrl());
                     jsonEmbed.put("image", jsonImage);
                 }
 
                 if (thumbnail != null) {
                     JSONObject jsonThumbnail = new JSONObject();
-
                     jsonThumbnail.put("url", thumbnail.getUrl());
                     jsonEmbed.put("thumbnail", jsonThumbnail);
                 }
 
                 if (author != null) {
                     JSONObject jsonAuthor = new JSONObject();
-
                     jsonAuthor.put("name", author.getName());
                     jsonAuthor.put("url", author.getUrl());
                     jsonAuthor.put("icon_url", author.getIconUrl());
@@ -121,11 +110,9 @@ public class DiscordWebhook {
                 List<JSONObject> jsonFields = new ArrayList<>();
                 for (EmbedObject.Field field : fields) {
                     JSONObject jsonField = new JSONObject();
-
                     jsonField.put("name", field.getName());
                     jsonField.put("value", field.getValue());
                     jsonField.put("inline", field.isInline());
-
                     jsonFields.add(jsonField);
                 }
 
@@ -143,10 +130,9 @@ public class DiscordWebhook {
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
 
-        OutputStream stream = connection.getOutputStream();
-        stream.write(json.toString().getBytes());
-        stream.flush();
-        stream.close();
+        try (OutputStream stream = connection.getOutputStream()) {
+            stream.write(json.toString().getBytes());
+        }
 
         connection.getInputStream().close();
         connection.disconnect();
@@ -244,7 +230,7 @@ public class DiscordWebhook {
             return this;
         }
 
-        private class Footer {
+        private static class Footer {
             private final String text;
             private final String iconUrl;
 
@@ -262,7 +248,7 @@ public class DiscordWebhook {
             }
         }
 
-        private class Thumbnail {
+        private static class Thumbnail {
             private final String url;
 
             private Thumbnail(String url) {
@@ -274,7 +260,7 @@ public class DiscordWebhook {
             }
         }
 
-        private class Image {
+        private static class Image {
             private final String url;
 
             private Image(String url) {
@@ -286,7 +272,7 @@ public class DiscordWebhook {
             }
         }
 
-        private class Author {
+        private static class Author {
             private final String name;
             private final String url;
             private final String iconUrl;
@@ -310,7 +296,7 @@ public class DiscordWebhook {
             }
         }
 
-        private class Field {
+        private static class Field {
             private final String name;
             private final String value;
             private final boolean inline;
@@ -335,9 +321,9 @@ public class DiscordWebhook {
         }
     }
 
-    private class JSONObject {
+    private static class JSONObject {
 
-        private final HashMap<String, Object> map = new HashMap<>();
+        private final Map<String, Object> map = new HashMap<>();
 
         void put(String key, Object value) {
             if (value != null) {
@@ -383,5 +369,4 @@ public class DiscordWebhook {
             return "\"" + string + "\"";
         }
     }
-
 }

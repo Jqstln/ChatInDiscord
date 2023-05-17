@@ -9,3 +9,4 @@ Messages: # You can change the messages here, but you can't change the colors (y
   NoPermission: "You don't have permission to use this command."
   ReloadCommand: "Plugin reloaded."
   InvalidUsage: "Invalid usage. Type /chatindiscord for help."
+  NotAllowed: "Using the @ symbol to mention players is not allowed."

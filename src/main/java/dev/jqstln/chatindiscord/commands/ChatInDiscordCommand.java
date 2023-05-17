@@ -21,15 +21,15 @@ public class ChatInDiscordCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        String prefix = showPrefix(this.plugin.getConfig().getString("Prefix"));
-        String reload = this.plugin.getConfig().getString("Messages.ReloadCommand");
-        String nopermission = this.plugin.getConfig().getString("Messages.NoPermission");
-        String invalidusage = this.plugin.getConfig().getString("Messages.InvalidUsage");
+        String prefix = showPrefix(plugin.getConfig().getString("Prefix"));
+        String reload = plugin.getConfig().getString("Messages.ReloadCommand");
+        String nopermission = plugin.getConfig().getString("Messages.NoPermission");
+        String invalidusage = plugin.getConfig().getString("Messages.InvalidUsage");
 
         if (args.length == 0) {
-            if(sender.hasPermission("chatindiscord.use")) {
-                Plugin plugin = Bukkit.getPluginManager().getPlugin("ChatInDiscord");
-                String version = plugin.getDescription().getVersion();
+            if (sender.hasPermission("chatindiscord.use")) {
+                Plugin chatInDiscordPlugin = Bukkit.getPluginManager().getPlugin("ChatInDiscord");
+                String version = chatInDiscordPlugin.getDescription().getVersion();
 
                 sender.sendMessage(prefix + "ChatInDiscord Help:");
                 sender.sendMessage(prefix + ChatColor.AQUA + "/chatindiscord reload " + ChatColor.WHITE + "- Reloads the ChatInDiscord plugin.");
@@ -71,5 +71,4 @@ public class ChatInDiscordCommand implements CommandExecutor, TabCompleter {
     public String showPrefix(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
-
 }
