@@ -20,38 +20,43 @@ public class PlayerChatListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
-        String webhookURL = this.plugin.getConfig().getString("IntegrationUrl");
-        String prefix = this.plugin.getConfig().getString("Prefix");
-        String error = this.plugin.getConfig().getString("Messages.ShowError");
+        String webhookURL = plugin.getConfig().getString("IntegrationUrl");
+        String prefix = plugin.getConfig().getString("Prefix");
+        String error = plugin.getConfig().getString("Messages.ShowError");
+        String notallowed = plugin.getConfig().getString("Messages.NotAllowed");
         String message = e.getMessage();
-        String player = e.getPlayer().getName();
+        Player player = e.getPlayer();
+        String playerUUID = player.getUniqueId().toString();
         DiscordWebhook webhook = new DiscordWebhook(webhookURL);
 
-        boolean useEmbed = this.plugin.getConfig().getBoolean("EmbedOptions.Enabled");
+        boolean useEmbed = plugin.getConfig().getBoolean("EmbedOptions.Enabled");
 
         if (webhookURL == null || webhookURL.isEmpty()) {
-            Player sender = e.getPlayer();
-            if (sender.hasPermission("chatindiscord.showerror")) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix) + ChatColor.GRAY + error);
+            if (player.hasPermission("chatindiscord.showerror")) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix) + ChatColor.GRAY + error);
             }
             return;
         }
 
+        if (message.matches(".*@(\\S+).*")) {
+            player.sendMessage(ChatColor.RED + notallowed);
+            e.setCancelled(true);
+            return;
+        }
 
         if (useEmbed) {
-            webhook.addEmbed((new DiscordWebhook.EmbedObject())
-                    .setDescription(player + ": " + message)
-                    .setColor(Color.decode(this.plugin.getConfig().getString("EmbedOptions.Color"))))
-                    .setThumbnail(this.plugin.getConfig().getString("EmbedOptions.Thumbnail"))
+            webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                    .setDescription(message)
+                    .setAuthor(player.getName(), "", "https://crafatar.com/avatars/" + playerUUID + "?size=512&overlay")
+                    .setColor(Color.decode(plugin.getConfig().getString("EmbedOptions.Color"))));
         } else {
-            webhook.setContent(player + ": " + message);
+            webhook.setContent(player.getName() + ": " + message);
         }
 
         try {
             webhook.execute();
-        } catch (IOException var7) {
-            // Bukkit.getLogger().severe(Arrays.toString(var7.getStackTrace()));
+        } catch (IOException ex) {
+            // Bukkit.getLogger().severe(Arrays.toString(ex.getStackTrace()));
         }
     }
-
 }
