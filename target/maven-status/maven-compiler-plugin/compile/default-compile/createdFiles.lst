@@ -1,6 +1,7 @@
 dev\jqstln\chatindiscord\discord\DiscordWebhook$EmbedObject$Author.class
 dev\jqstln\chatindiscord\discord\DiscordWebhook$EmbedObject$Thumbnail.class
 dev\jqstln\chatindiscord\discord\DiscordWebhook$EmbedObject.class
+dev\jqstln\chatindiscord\UpdateChecker.class
 dev\jqstln\chatindiscord\discord\DiscordWebhook$JSONObject.class
 dev\jqstln\chatindiscord\discord\DiscordWebhook$EmbedObject$Footer.class
 dev\jqstln\chatindiscord\commands\ChatInDiscordCommand.class
