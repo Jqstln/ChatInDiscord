@@ -10,6 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.List;
 
 public class PlayerChatListener implements Listener {
     private final ChatInDiscord plugin;
@@ -20,18 +21,17 @@ public class PlayerChatListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e) {
-        String webhookURL = plugin.getConfig().getString("IntegrationUrl");
+        List<String> webhookURLs = plugin.getConfig().getStringList("IntegrationUrls");
         String prefix = plugin.getConfig().getString("Prefix");
         String error = plugin.getConfig().getString("Messages.ShowError");
         String notallowed = plugin.getConfig().getString("Messages.NotAllowed");
         String message = e.getMessage();
         Player player = e.getPlayer();
         String playerUUID = player.getUniqueId().toString();
-        DiscordWebhook webhook = new DiscordWebhook(webhookURL);
 
         boolean useEmbed = plugin.getConfig().getBoolean("EmbedOptions.Enabled");
 
-        if (webhookURL == null || webhookURL.isEmpty()) {
+        if (webhookURLs == null || webhookURLs.isEmpty()) {
             if (player.hasPermission("chatindiscord.showerror")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix) + ChatColor.GRAY + error);
             }
@@ -44,19 +44,23 @@ public class PlayerChatListener implements Listener {
             return;
         }
 
-        if (useEmbed) {
-            webhook.addEmbed(new DiscordWebhook.EmbedObject()
-                    .setDescription(message)
-                    .setAuthor(player.getName(), "", "https://crafatar.com/avatars/" + playerUUID + "?size=512&overlay")
-                    .setColor(Color.decode(plugin.getConfig().getString("EmbedOptions.Color"))));
-        } else {
-            webhook.setContent(player.getName() + ": " + message);
-        }
+        for (String webhookURL : webhookURLs) {
+            DiscordWebhook webhook = new DiscordWebhook(webhookURL);
 
-        try {
-            webhook.execute();
-        } catch (IOException ex) {
-            // Bukkit.getLogger().severe(Arrays.toString(ex.getStackTrace()));
+            if (useEmbed) {
+                webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                        .setDescription(message)
+                        .setAuthor(player.getName(), "", "https://crafatar.com/avatars/" + playerUUID + "?size=512&overlay")
+                        .setColor(Color.decode(plugin.getConfig().getString("EmbedOptions.Color"))));
+            } else {
+                webhook.setContent(player.getName() + ": " + message);
+            }
+
+            try {
+                webhook.execute();
+            } catch (IOException ex) {
+                // Bukkit.getLogger().severe(Arrays.toString(ex.getStackTrace()));
+            }
         }
     }
 }
