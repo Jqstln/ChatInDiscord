@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,7 +25,6 @@ public class PlayerChatListener implements Listener {
         String prefix = plugin.getConfig().getString("Prefix");
         String error = plugin.getConfig().getString("Messages.ShowError");
         String notallowed = plugin.getConfig().getString("Messages.NotAllowed");
-        String message = e.getMessage();
         Player player = e.getPlayer();
         String playerUUID = player.getUniqueId().toString();
 
@@ -33,10 +32,12 @@ public class PlayerChatListener implements Listener {
 
         if (webhookURLs == null || webhookURLs.isEmpty()) {
             if (player.hasPermission("chatindiscord.showerror")) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix) + ChatColor.GRAY + error);
+                player.sendMessage(formatMessage(prefix, ChatColor.GRAY + error));
             }
             return;
         }
+
+        String message = e.getMessage();
 
         if (message.matches(".*@(\\S+).*")) {
             player.sendMessage(ChatColor.RED + notallowed);
@@ -48,19 +49,29 @@ public class PlayerChatListener implements Listener {
             DiscordWebhook webhook = new DiscordWebhook(webhookURL);
 
             if (useEmbed) {
-                webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                String avatarURL = "https://crafatar.com/avatars/" + playerUUID + "?size=512&overlay";
+                Color embedColor = Color.decode(plugin.getConfig().getString("EmbedOptions.Color"));
+
+                DiscordWebhook.EmbedObject embedObject = new DiscordWebhook.EmbedObject()
                         .setDescription(message)
-                        .setAuthor(player.getName(), "", "https://crafatar.com/avatars/" + playerUUID + "?size=512&overlay")
-                        .setColor(Color.decode(plugin.getConfig().getString("EmbedOptions.Color"))));
+                        .setAuthor(player.getName(), "", avatarURL)
+                        .setColor(embedColor);
+
+                webhook.addEmbed(embedObject);
             } else {
-                webhook.setContent(player.getName() + ": " + message);
+                String chatMessage = player.getName() + ": " + message;
+                webhook.setContent(chatMessage);
             }
 
             try {
                 webhook.execute();
             } catch (IOException ex) {
-                // Bukkit.getLogger().severe(Arrays.toString(ex.getStackTrace()));
+                // Handle the exception (e.g., log it)
             }
         }
+    }
+
+    private String formatMessage(String prefix, String message) {
+        return ChatColor.translateAlternateColorCodes('&', prefix) + message;
     }
 }
