@@ -2,6 +2,7 @@ package dev.jqstln.chatindiscord;
 
 import dev.jqstln.chatindiscord.commands.ChatInDiscordCommand;
 import dev.jqstln.chatindiscord.listeners.PlayerChatListener;
+import dev.jqstln.chatindiscord.listeners.PlayerCommandListener;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,5 +41,6 @@ public final class ChatInDiscord extends JavaPlugin {
 
     public void registerListeners() {
         getServer().getPluginManager().registerEvents(new PlayerChatListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerCommandListener(this), this);
     }
 }
